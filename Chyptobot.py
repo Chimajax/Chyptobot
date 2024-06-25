@@ -67,6 +67,7 @@ async def save_username(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Buttons for Telegram channel and Web App
     buttons = [
         [InlineKeyboardButton("Follow our Channel", url="https://t.me/chyptochannel")],
+        [InlineKeyboardButton("Refer and Earn Up to $25,000", url="https://t.me/Chypto_Referral_Bot")],
         [InlineKeyboardButton("Play Chypto Game", web_app=WebAppInfo(url="https://chimajax.github.io/Chypto/index.html"))]
     ]
     reply_markup = InlineKeyboardMarkup(buttons)
