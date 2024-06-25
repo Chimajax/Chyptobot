@@ -27,6 +27,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # Initial message with social media buttons
     buttons = [
+        [InlineKeyboardButton("Follow our Channel", url="https://t.me/chyptochannel")],
         [InlineKeyboardButton("Subscribe to Youtube", url="https://www.youtube.com/@Chypto")],
         [InlineKeyboardButton("Follow our X", url="https://X.com/@Chypto_Official")]
     ]
