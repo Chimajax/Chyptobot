@@ -12,7 +12,8 @@ from telegram.ext import (
     MessageHandler,
     ContextTypes,
     ConversationHandler,
-    filters
+    filters,
+    CallbackContext
 )
 import os
 
@@ -57,7 +58,7 @@ async def save_username(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Thank You")
 
     # Welcome message with image
-    with open('coin_score.jpg', 'rb') as photo:  # Changed to .jpg
+    with open('coin_score.jpg', 'rb') as photo:  
         await context.bot.send_photo(
             chat_id=update.message.chat_id,
             photo=photo,
@@ -87,7 +88,7 @@ async def save_username(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     return ConversationHandler.END
 
-async def remind_user(context: ContextTypes.DEFAULT_TYPE):
+async def remind_user(context: CallbackContext):
     job = context.job
     await context.bot.send_message(
         chat_id=job.context,
@@ -118,9 +119,9 @@ def main():
 
     application.add_handler(conv_handler)
     application.add_handler(CommandHandler('done', set_reminder))
-    application.add_handler(MessageHandler(filters.COMMAND, set_reminder))
 
-    application.run_polling()
+    # Set up webhook
+    application.run_webhook(path="/webhook", port=3000, url="https://delightful-alike-manuscript.glitch.me/webhook")
 
 if __name__ == '__main__':
     main()
