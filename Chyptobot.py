@@ -1,3 +1,4 @@
+# from telegram.constants import WebAppTheme, WebAppInfoSize
 from telegram import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
@@ -42,7 +43,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # "DONE" button
     done_button = [[KeyboardButton("DONE", request_contact=False)]]
     reply_markup_done = ReplyKeyboardMarkup(done_button, one_time_keyboard=True, resize_keyboard=True)
-    await update.message.reply_text("Click 'DONE' when you have followed our socials.", reply_markup=reply_markup_done)
+    await update.message.reply_text("Click 'DONE' when you have followed our socials, confirm you have or you might loose rewards later.", reply_markup=reply_markup_done)
 
     return ASK_USERNAME
 
@@ -57,22 +58,21 @@ async def save_username(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Thank You message
     await update.message.reply_text("Thank You")
 
-    # Welcome message with image
-    with open('coin_score.jpg', 'rb') as photo:  
+    # Welcome message with image and buttons
+    with open('coin_score.jpg', 'rb') as photo:
+        buttons = [
+            [InlineKeyboardButton("Follow our Channel", url="https://t.me/chyptochannel")],
+            [InlineKeyboardButton("Refer and Earn Up to $25,000", url="https://t.me/Chypto_Referral_Bot?start=start")],
+            [InlineKeyboardButton("Play Chypto Game", web_app=WebAppInfo(url="https://chimajax.github.io/Chypto/index.html"))]
+        ]
+        # , theme=WebAppTheme.DARK, size=WebAppInfoSize.FULL_SCREEN
+        reply_markup = InlineKeyboardMarkup(buttons)
         await context.bot.send_photo(
             chat_id=update.message.chat_id,
             photo=photo,
-            caption=f"Welcome to Chypto! [@{telegram_username}]\n\nMining Made Easy\n\nWe’re thrilled to have you join our community. Chypto is a thrilling game where you can experience the excitement of mining coins and convert to digital currency, and earn rewards.\n\nHere’s how to get started:\n\nStart Mining: Tap to mine resources and gather as much coins as possible.\nUpgrade Your Equipment: Use your resources to enhance your mining rigs for better efficiency.\nJoin Competitions: Participate in regular events to earn extra\nStay updated on our socials to get a chance to win quick $$$\nEarn and Withdraw: Convert your Coins into real Money and enjoy the fruits of your mining efforts.\nEnsure you Stay updated with our latest tips, tutorials, and event announcements"
+            caption=f"Welcome to Chypto! [@{telegram_username}]\n\nMining Made Easy\n\nWe’re thrilled to have you join our community. Chypto is a thrilling game where you can experience the excitement of mining coins and convert to digital currency, and earn rewards.\n\nHere’s how to get started:\n\nStart Mining: Tap to mine resources and gather as much coins as possible.\n\nUpgrade Your Equipment: Use your resources to enhance your mining rigs for better efficiency.\n\nJoin Competitions: Participate in regular events to earn extra\n\nStay updated on our socials to get a chance to win quick $$$\n\nEarn and Withdraw: Convert your Coins into real Money and enjoy the fruits of your mining efforts.\n\nEnsure you Stay updated with our latest tips, tutorials, and event announcements\n\nClick the buttons below to stay updated and play the game.",
+            reply_markup=reply_markup
         )
-
-    # Buttons for Telegram channel and Web App
-    buttons = [
-        [InlineKeyboardButton("Follow our Channel", url="https://t.me/chyptochannel")],
-        [InlineKeyboardButton("Refer and Earn Up to $25,000", url="https://t.me/Chypto_Referral_Bot")],
-        [InlineKeyboardButton("Play Chypto Game", web_app=WebAppInfo(url="https://chimajax.github.io/Chypto/index.html"))]
-    ]
-    reply_markup = InlineKeyboardMarkup(buttons)
-    await update.message.reply_text("Click the buttons below to stay updated and play the game.", reply_markup=reply_markup)
 
     # Save user data for future reference
     context.user_data['x_username'] = x_username
@@ -97,6 +97,7 @@ async def remind_user(context: CallbackContext):
             [InlineKeyboardButton("Follow our Channel", url="https://t.me/chyptochannel")],
             [InlineKeyboardButton("Play", web_app=WebAppInfo(url="https://chimajax.github.io/Chypto/index.html"))]
         ])
+        # , theme=WebAppTheme.DARK, size=WebAppInfoSize.FULL_SCREEN
     )
 
 async def set_reminder(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -120,8 +121,8 @@ def main():
     application.add_handler(conv_handler)
     application.add_handler(CommandHandler('done', set_reminder))
 
-    # Set up webhook
-    application.run_webhook(path="/webhook", port=3000, url="https://delightful-alike-manuscript.glitch.me/webhook")
+    # Set up long polling
+    application.run_polling()
 
 if __name__ == '__main__':
     main()
